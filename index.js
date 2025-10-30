@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 dotenv.config()
-import {GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import {GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // const {GetObjectCommand,s}=require("@aws-sdk/client-s3")
@@ -25,8 +25,22 @@ const getObjectURL= async (key)=>{
     return url;
 }
 
+const putObjectURL= async (filename,contentType)=>{
+    const command=new PutObjectCommand({
+        Bucket:process.env.AWS_BUCKET_NAME,
+        Key:`uploads/user-uploads/${filename}`,
+        ContentType:contentType
+    });
+    const url=await getSignedUrl(s3Client,command)
+    return url
+};
+
+
+
 const init=async ()=>{
-    console.log("url for simple.mp4",await getObjectURL("simple.mp4"));
+    console.log("url for simple.mp4",await getObjectURL("uploads/user-uploads/video-1761827280052.mp4"));
+
+    // console.log("url for uploading",await putObjectURL(`video-${Date.now()}.mp4`,"video/mp4"));
 }
 
 init()
