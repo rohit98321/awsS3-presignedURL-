@@ -1,3 +1,5 @@
+import dotenv from "dotenv"
+dotenv.config()
 import {GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -7,16 +9,16 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 //api calling behalf of user whose credential you are using
 const s3Client=new S3Client({
-    region:"ap-south-1",
+    region:process.env.AWS_REGION,
     credentials:{
-        accessKeyId:'AKIARWHYVAG6VGVRNIFH',
-        secretAccessKey:"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"
+        accessKeyId:process.env.ACCESS_KEY_ID,
+        secretAccessKey:process.env.SECRET_ACCESS_KEY,
     },
 });
 
 const getObjectURL= async (key)=>{
     const command=new GetObjectCommand({
-        Bucket:"rohit-private-r98321",
+        Bucket:process.env.AWS_BUCKET_NAME,
         Key:key,
     })
     const url=await getSignedUrl(s3Client,command)
